@@ -1,4 +1,4 @@
-# ORHANGE
+# Ghostship
 
 > **Municipal Hydrotherapy District · est. 2003**  
 > *A retro 3D browser-based hydro-horror FPS built with p5.js.*
@@ -7,7 +7,7 @@
 
 ## 🌊 Overview
 
-**ORHANGE** is a stylized, retro 3D FPS built using [p5.js](https://p5js.org/). Explore pool halls beneath ORHANGE, the glass sky, the empty city, and the Funhouse. Recover Lumen Cores, battle surreal aquatic horrors, upgrade your hydro-arsenal, and uncover the eerie memories buried deep within the complex.
+**Ghostship** (also known as *ORHANGE*) is a stylized, retro 3D FPS built using [p5.js](https://p5js.org/). Explore pool halls beneath the facility, the glass sky, the empty city, and the Funhouse. Recover Lumen Cores, battle surreal aquatic horrors, upgrade your hydro-arsenal, and uncover the eerie memories buried deep within the complex.
 
 ## 🎮 Game Modes
 
