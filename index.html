@@ -1,0 +1,167 @@
+<title>ORHANGE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=VT323&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+
+
+<div id="game"></div>
+<div id="fx"><div id="scan"></div><div id="vig"></div><div id="dmg"></div><div id="flash"></div></div>
+
+<div id="hud" class="hidden">
+  <div id="tl">
+    <div class="glass pill"><span class="bubble"></span><b>ORHANGE</b><span id="sector">SECTOR 01</span></div>
+    <div id="obj" class="glass"><div id="objTxt">Recover the Lumen Cores</div><div id="coreDots"></div></div>
+    <div id="dreadPill" class="glass pill">DREAD <span id="dreadBars"></span></div>
+  </div>
+  <div id="tr">
+    <div class="row"><div id="combo" class="glass pill hidden">&#xD7;1.0</div><div class="glass pill"><span id="score">0</span></div><div class="glass pill"><span class="bubble"></span><span id="tokens">0</span></div></div>
+    <canvas id="mini" width="200" height="200"></canvas>
+  </div>
+  <div id="hpwrap">
+    <div class="orb"><div class="liquid" id="hpLiq"></div><div class="shine"></div><span id="hpTxt">100</span></div>
+    <div id="stam"><i id="stamFill"></i></div>
+  </div>
+  <div id="wpn" class="glass">
+    <div class="wname"><span id="wName">PRISM-9</span><small id="wSub">hydro-laser</small></div>
+    <div class="ammo"><b id="ammoMag">120</b><span>/</span><span id="ammoRes">360</span><em id="ammoPlus">+0</em></div>
+    <div class="tube"><i id="magFill"></i><i id="relFill"></i><div class="shine"></div></div>
+    <div id="wstat"><span id="wstate">READY</span><span id="elem">LIGHT</span></div>
+    <div id="slots"></div>
+  </div>
+  <div id="cross"></div><div id="hitmark"></div><div id="eff"></div>
+  <div id="bossbar" class="glass hidden"><div class="bn">THE 21ST LIFEGUARD</div><div class="bt"><i id="bossFill"></i></div><div id="bossShield">HALO INTACT</div></div>
+  <div id="prompt" class="glass pill hidden"></div>
+  <div id="toasts"></div>
+  <div id="banner"><div class="big" id="bigTxt">SECTOR 01</div><div class="sub" id="subTxt">MUNICIPAL HYDROTHERAPY DISTRICT</div></div>
+</div>
+
+<div class="bubbles" id="bubbles"></div>
+<div id="splash"><div class="by">A GAME BY</div><div class="name">Cameosky</div><div class="skip">CLICK TO CONTINUE</div></div>
+
+<div id="title" class="screen">
+  <div>
+    <h1 class="logo">ORHANGE</h1>
+    <div class="tag">Municipal Hydrotherapy District &#xB7; est. 2003</div>
+    <div class="tag" style="margin-top:8px;letter-spacing:.45em;opacity:.85">A game by Cameosky</div>
+  </div>
+  <div class="modes">
+    <div class="glass mode">
+      <h2>Story &#xB7; Sectors</h2>
+      <p>Ten sectors beneath ORHANGE: the pool halls, the glass sky, the empty city, the Funhouse. Rooms that never end. A voice that says you have always been here. Keep going down.</p>
+      <button class="btn green" id="btnLevels">Begin the Story</button>
+    </div>
+    <div class="glass mode">
+      <h2>Death Pool</h2>
+      <p>One map, endless rounds. Earn points, buy open the glass doors to new rooms, and see how long you last. Pick the pools or the Funhouse.</p>
+      <div class="brow"><button class="btn red" id="btnDeath">Death Pool</button><button class="btn" id="btnFun" style="background:linear-gradient(180deg,#ffe0fb 0%,#ff9bf0 46%,#c44dff 52%,#ff8ef5 100%);border-color:#8a2bb5">Death Funhouse</button></div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center"><button class="btn ghost" id="btnMap">&#x25C9; Sector Map &#xB7; every level</button></div>
+  <div class="glass tcard">
+    <div class="keys">
+      <span><kbd>WASD</kbd> move &#xB7; <kbd>Shift</kbd> sprint &#xB7; <kbd>Space</kbd> jump</span>
+      <span><kbd>Left click</kbd> fire &#xB7; <kbd>Right click</kbd> laser pulse</span>
+      <span><kbd>R</kbd> reload &#xB7; <kbd>1&#x2013;4</kbd> / <kbd>wheel</kbd> switch</span>
+      <span><kbd>E</kbd> use doors &amp; kiosks &#xB7; <kbd>Esc</kbd> pause</span>
+    </div>
+  </div>
+  <div class="stats" id="titleStats"></div>
+  <div><button class="btn ghost" id="soundHint">&#x266A; Play the theme</button></div>
+</div>
+
+<div id="pause" class="screen dim hidden">
+  <div class="glass win">
+    <div class="titlebar"><span>System Preferences &#x2014; ORHANGE</span><span class="dots"><i></i><i></i><i></i></span></div>
+    <div class="wbody">
+      <div class="set">
+        <label for="sens">Mouse sensitivity</label><input id="sens" type="range" min="0.6" max="6" step="0.1" value="2.4"><output id="sensO">2.4</output>
+        <label for="vol">Volume</label><input id="vol" type="range" min="0" max="1" step="0.05" value="0.7"><output id="volO">70%</output>
+        <label for="mus">Music</label><input id="mus" type="range" min="0" max="1" step="0.05" value="0.6"><output id="musO">60%</output>
+        <label for="res">Render resolution</label><select id="res"><option value="200">200p &#xB7; crunchy</option><option value="270" selected>270p &#xB7; PS2</option><option value="360">360p</option><option value="480">480p &#xB7; clean</option></select><span></span>
+        <label for="voiceSel">Narrator voice</label><select id="voiceSel"><option value="1" selected>On</option><option value="0">Off</option></select><span></span>
+        <label for="wob">Vertex wobble</label><select id="wob"><option value="1.5" selected>On</option><option value="0">Off</option></select><span></span>
+      </div>
+      <div>
+        <p class="term">&gt; Entity weakness chart</p>
+        <div class="chartwrap"><div class="chart" id="chart"></div></div>
+      </div>
+      <div class="shoprow">
+        <button class="btn ghost" id="btnQuit">Quit to title</button>
+        <button class="btn green" id="btnResume">Resume</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="shop" class="screen dim hidden">
+  <div class="glass win">
+    <div class="titlebar"><span id="shopTitle">Hydro Terminal</span><span class="dots"><i></i><i></i><i></i></span></div>
+    <div class="wbody">
+      <div class="sum" id="shopSum"></div>
+      <p class="term" id="shopMsg">&gt; Select one augmentation. Additional draws cost tokens.</p>
+      <div class="cards" id="cards"></div>
+      <div class="shoprow">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn ghost" id="btnHeal">Medkit</button>
+          <button class="btn ghost" id="btnAmmo">Ammo crate</button>
+          <button class="btn ghost" id="btnReroll">Draw again</button>
+        </div>
+        <button class="btn green" id="btnDescend">Descend &#x25B8;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="mapScreen" class="screen dim hidden">
+  <div class="glass win" style="width:min(940px,100%)">
+    <div class="titlebar"><span>Sector Map &#x2014; ORHANGE</span><span class="dots"><i></i><i></i><i></i></span></div>
+    <div class="wbody">
+      <p class="term">&gt; Every level beneath ORHANGE. Choose where to begin.</p>
+      <div class="mapgrid" id="mapGrid"></div>
+      <div class="shoprow"><button class="btn ghost" id="btnMapBack">Back</button><span></span></div>
+    </div>
+  </div>
+</div>
+
+<div id="interlude" class="screen dim hidden">
+  <div class="glass win">
+    <div class="titlebar"><span id="memBar">Memory</span><span class="dots"><i></i><i></i><i></i></span></div>
+    <div class="wbody">
+      <p class="mem" id="memNum">MEMORY 01</p>
+      <h2 class="memTitle" id="memTitle">Opening Day</h2>
+      <div class="memLines" id="memLines"></div>
+      <div class="shoprow"><span></span><button class="btn green" id="btnMem">Continue &#x25B8;</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="ending" class="screen dim hidden">
+  <div class="glass win">
+    <div class="titlebar"><span>ORHANGE &#x2014; Closed for the season</span><span class="dots"><i></i><i></i><i></i></span></div>
+    <div class="wbody" id="endBody"></div>
+  </div>
+</div>
+
+<div id="dead" class="screen dim hidden">
+  <div class="glass win" style="max-width:560px">
+    <div class="titlebar" style="background:linear-gradient(180deg,#ffc6d2 0%,#ff6b8c 48%,#e2335d 52%,#ff6f93 100%)"><span>Session ended</span><span class="dots"><i></i><i></i><i></i></span></div>
+    <div class="wbody">
+      <p class="term" id="deadMsg">&gt; You were absorbed into the water.</p>
+      <div class="sum" id="deadSum"></div>
+      <div class="shoprow"><button class="btn ghost" id="btnTitle">Title</button><button class="btn" id="btnCheckpoint">Retry this sector</button><button class="btn green" id="btnRetry">Start over</button></div>
+    </div>
+  </div>
+</div>
+
+<button id="lockMsg" class="btn hidden">Click to resume</button>
+
+<script src="js/core.js"></script>
+<script src="js/shaders.js"></script>
+<script src="js/world.js"></script>
+<script src="js/actors.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/main.js"></script>
